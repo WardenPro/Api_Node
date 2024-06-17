@@ -31,7 +31,7 @@ docker build -t api-node .
 Pour lancer le conteneur, exécutez :
 
 ```sh
-docker run -d -p 3000:3000 api-node
+docker run -d -p 3000:3000 --name api-node api-node
 ```
 
 L'option `-d` exécute les conteneurs en mode détaché (en arrière-plan).
