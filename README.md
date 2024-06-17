@@ -14,7 +14,7 @@ Ce projet est une API Node.js utilisant Fastify, Zod pour la validation des sch�
 ### Cloner le dépôt
 
 ```sh
-git clone [https://github.com/WardenPro/Api_Node.git](https://github.com/WardenPro/Api_Node.git)
+git clone https://github.com/WardenPro/Api_Node.git
 cd Api-Node
 ```
 
