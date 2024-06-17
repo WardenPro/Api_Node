@@ -6,11 +6,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN corepack enable
-RUN yarn install
-RUN yarn add fastify
-RUN yarn add zod fastify-type-provider-zod
-RUN yarn add zod zod-validation-error
+RUN corepack enable && yarn
 
 EXPOSE 3000
 
