@@ -160,8 +160,3 @@ yarn start
 
 Le serveur sera accessible sur `http://localhost:3000`.
 
-## Auteur
-
-- Votre Nom
-- Votre Email
-- Votre GitHub : [votre-utilisateur](https://github.com/votre-utilisateur)
