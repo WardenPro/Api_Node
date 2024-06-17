@@ -12,6 +12,6 @@ RUN yarn add fastify
 RUN yarn add zod fastify-type-provider-zod
 RUN yarn add zod zod-validation-error
 
-EXPOSE 1234
+EXPOSE 3000
 
 CMD [ "yarn", "all" ]
