@@ -1,6 +1,6 @@
 FROM node:22.3.0-alpine
 
-RUN apk update && apk upgrade && apk add --no-cache libstdc++ curl gnupg tar xz
+RUN apk add --no-cache libstdc++ curl gnupg tar xz
 
 WORKDIR /usr/src/app
 
