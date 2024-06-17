@@ -1,0 +1,36 @@
+{
+    "name": "2023_node",
+    "packageManager": "yarn@4.2.2",
+    "type": "module",
+    "devDependencies": {
+        "@jest/globals": "^29.7.0",
+        "@tsconfig/node20": "^20.1.4",
+        "@types/node": "^20.12.7",
+        "concurrently": "^8.2.2",
+        "date-fns": "^3.6.0",
+        "jest": "^29.7.0",
+        "nodemon": "^3.1.0",
+        "prettier": "3.2.5",
+        "ts-jest": "^29.1.2",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.5"
+    },
+    "scripts": {
+        "c": "yarn tsc",
+        "start": "node dist/",
+        "all": "yarn c && yarn start",
+        "static": "eslint .",
+        "stylecheck": "prettier --check '**/*.{js,jsx,ts,tsx,css,scss,json}'",
+        "format": "prettier --write '**/*.{js,jsx,ts,tsx,css,scss,json}'",
+        "clear": "rm -rf dist",
+        "auto": "concurrently \"yarn tsc --watch\" \"nodemon dist/index.js\"",
+        "dev": "nodemon --watch src --ext ts --exec 'yarn all'"
+    },
+    "dependencies": {
+        "fastify": "^4.28.0",
+        "fastify-type-provider-zod": "^1.2.0",
+        "lolcatjs": "^2.4.3",
+        "zod": "^3.23.8",
+        "zod-validation-error": "^3.3.0"
+    }
+}

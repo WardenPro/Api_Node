@@ -1,57 +1,46 @@
-# Utilise une image de base. Exemple : ubuntu:20.04
-FROM ubuntu:20.04
+# Utiliser l'image de base alpine avec Node.js préinstallé
+FROM alpine:3.19
 
-# Met à jour les paquets et installe les dépendances nécessaires.
-# Exemple : RUN apt-get update && apt-get install -y git
-RUN apt-get update && apt-get install -y <paquet>
+# Définir la version de Node.js et de Yarn
+ENV NODE_VERSION 22.3.0
+ENV YARN_VERSION 1.22.22
 
-# Copie des fichiers ou dossiers du système de fichiers local vers le système de fichiers de l'image.
-# Exemple : COPY . /app
-COPY <chemin_du_système_de_fichiers_local> <chemin_dans_l'image>
+# Ajouter l'utilisateur node
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node
 
-# Ajoute des fichiers depuis une URL ou un fichier tar local au système de fichiers de l'image.
-# Exemple : ADD https://example.com/big.tar.xz /usr/src/things/
-ADD <source_url_ou_tar_local> <destination_dans_image>
+# Installer Node.js et ses dépendances
+RUN apk add --no-cache libstdc++ \
+    && apk add --no-cache --virtual .build-deps curl gnupg tar \
+    && curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz" \
+    && tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+    && rm -f "node-v$NODE_VERSION-linux-x64-musl.tar.xz" \
+    && node --version \
+    && npm --version
 
-# Définit la variable d'environnement. Exemple : ENV MY_NAME="John Doe"
-ENV <clé> <valeur>
+# Installer Yarn
+RUN curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v$YARN_VERSION.tar.gz \
+    && yarn --version
 
-# Exécute des commandes lors de la construction de l'image.
-# Cela diffère de RUN car CMD n'est exécuté qu'à l'exécution du conteneur.
-# Exemple : CMD ["echo", "Hello world"]
-CMD ["executable","param1","param2"]
+# Définir le répertoire de travail
+WORKDIR /usr/src/app
 
-# Expose des ports. Exemple : EXPOSE 80/tcp
-EXPOSE <port> [<tcp/udp>]
+# Copier les fichiers de votre projet dans l'image Docker
+COPY . .
 
-# Définit le répertoire de travail où s'exécutent les commandes RUN, CMD, ENTRYPOINT, ADD et COPY.
-# Exemple : WORKDIR /path/to/workdir
-WORKDIR <chemin_du_répertoire_de_travail>
+# Installer les dépendances de votre projet
+RUN yarn install
+RUN yarn add fastify
+RUN yarn add zod fastify-type-provider-zod
+RUN yarn add zod zod-validation-error
 
-# Exécute une commande lors du lancement du conteneur. Peut être utilisé pour configurer un conteneur qui sera utilisé comme base pour d'autres images.
-# Exemple : ENTRYPOINT ["executable", "param1", "param2"]
-ENTRYPOINT ["executable", "param1", "param2"]
+# Exposer le port que votre application utilise
+EXPOSE 3000
 
-# Copie les fichiers, les répertoires ou les URL distants et ajoute un utilisateur.
-# Exemple : USER myuser
-USER <nom_d'utilisateur>
-
-# Ajoute des points de montage de volume.
-# Exemple : VOLUME ["/data"]
-VOLUME ["<chemin_du_volume>"]
-
-# Ajoute des labels à votre image pour aider à l'organiser avec des métadonnées supplémentaires.
-# Exemple : LABEL version="1.0"
-LABEL <clé>="<valeur>"
-
-# Arguments qui peuvent être passés au Dockerfile au moment de la construction de l'image.
-# Exemple : ARG VERSION=latest
-ARG <nom>=[<valeur_par_défaut>]
-
-# Définit les commandes de santé qui sont exécutées pour vérifier que votre application fonctionne bien.
-# Exemple : HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost/ || exit 1
-HEALTHCHECK --interval=<intervalle> --timeout=<temps_limite> CMD <commande>
-
-# OnBuild déclenche des instructions à exécuter lorsqu'une image est utilisée comme base pour une autre image.
-# Exemple : ONBUILD RUN /usr/local/bin/python-build --dir /app
-ONBUILD <INSTRUCTION>
+# Définir le point d'entrée pour le conteneur
+CMD [ "yarn", "start" ]
