@@ -8,15 +8,14 @@ Ce projet est une API Node.js utilisant Fastify, Zod pour la validation des sch�
 ## Prérequis
 
 - Docker
-- Docker Compose
 
 ## Installation
 
 ### Cloner le dépôt
 
 ```sh
-git clone https://github.com/votre-utilisateur/votre-repo.git
-cd votre-repo
+git clone [https://github.com/WardenPro/Api_Node.git](https://github.com/WardenPro/Api_Node.git)
+cd Api-Node
 ```
 
 ### Construire l'image Docker
@@ -24,15 +23,15 @@ cd votre-repo
 Pour construire l'image Docker, exécutez la commande suivante :
 
 ```sh
-docker-compose build
+docker build -t api-node .
 ```
 
-### Lancer les services
+### Lancer le conteneur
 
-Pour lancer les services en utilisant Docker Compose, exécutez :
+Pour lancer le conteneur, exécutez :
 
 ```sh
-docker-compose up -d
+docker run -d -p 3000:3000 api-node
 ```
 
 L'option `-d` exécute les conteneurs en mode détaché (en arrière-plan).
@@ -42,7 +41,7 @@ L'option `-d` exécute les conteneurs en mode détaché (en arrière-plan).
 Pour arrêter les services, utilisez la commande suivante :
 
 ```sh
-docker-compose down
+docker stop api-node
 ```
 
 ## Routes de l'API
@@ -149,13 +148,17 @@ Pour exécuter l'application localement sans Docker, vous devez avoir Node.js et
 ### Installation des dépendances
 
 ```sh
+corepack enable
 yarn install
+yarn add fastify
+yarn add zod fastify-type-provider-zod
+yarn add zod zod-validation-error
 ```
 
 ### Lancer le serveur
 
 ```sh
-yarn start
+yarn all
 ```
 
 Le serveur sera accessible sur `http://localhost:3000`.
