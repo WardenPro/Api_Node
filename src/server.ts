@@ -111,6 +111,21 @@ export function start_web_server() {
             return { message: `not found`, id };
         },
     );
+    web_server.delete<{ Params: { id: number } }>(
+        "/operations/:id",
+        { schema: { params: z.object({ id: z.coerce.number() }) } },
+        async (req, res) => {
+            let id = req.params.id;
+
+            if (isNaN(id) || id < 0 || id >= operations.length) {
+                res.code(404);
+                return { message: `not found`, id };
+            }
+
+            const deletedOperation = operations.splice(id, 1);
+            return deletedOperation[0];
+        },
+    );
 
     let names: string[] = ["Jérôme Cahuzac", "Sergueï Choïgou"];
     web_server.post<{ Body: { name: string } }>("/names", async (req, res) => {
