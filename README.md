@@ -15,7 +15,7 @@ Ce projet est une API Node.js utilisant Fastify, Zod pour la validation des sch√
 
 ```sh
 git clone https://github.com/WardenPro/Api_Node.git
-cd Api-Node
+cd Api_Node
 ```
 
 ### Construire l'image Docker
